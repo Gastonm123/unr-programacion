@@ -78,10 +78,11 @@
 ; manejar-teclado: Number Key-event -> Number
 (check-expect(manejar-teclado 12 "left") 0)
 (check-expect(manejar-teclado 12 "right") 100)
+
 (define
   (manejar-teclado estado key) (cond
-                                 [(key=? key "left") 0]
-                                 [(key=? key "right") 100]))
+                                 [(key=? key "left") (random 50)]
+                                 [(key=? key "right") (+ 51 (random 50))]))
 
 
 (big-bang -1
