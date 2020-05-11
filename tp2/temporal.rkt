@@ -72,12 +72,13 @@
   )
 
 
-; Función manejar-teclado:si se presiona la flecha derecha el estado pasa a ser 100,
-; si se presiona la flecha izquierda el estado pasa a ser 0.
+; Función manejar-teclado: si se presiona la flecha izquierda el estado pasa a ser un numero
+; aleatorio entre 0 y 49, si se presiona la flecha izquierda el estado pasa a ser un numero
+; aleatorio entre 51 y 100.
 
 ; manejar-teclado: Number Key-event -> Number
-(check-expect(manejar-teclado 12 "left") 0)
-(check-expect(manejar-teclado 12 "right") 100)
+(check-random (manejar-teclado 12 "left") (random 50))
+(check-random (manejar-teclado 12 "right") (+ 51 (random 50)))
 
 (define
   (manejar-teclado estado key) (cond
