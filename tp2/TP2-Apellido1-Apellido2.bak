@@ -94,7 +94,7 @@ Integrantes:
                                  [(key=? key "right") (+ 51 (random 50))]))
 
 
-(big-bang 50
+(big-bang -1
   ;[state #t]
   [on-tick avanzar 2]
   [on-draw dibujar]

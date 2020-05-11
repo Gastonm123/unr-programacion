@@ -1,3 +1,11 @@
+#|
+Trabajo Práctico 2: Programas Interactivos
+
+Integrantes:
+- Martinez Castro, Gaston, comisión 3.
+- Peinado, Victoria, comisión 4.
+|#
+
 #lang racket
 (require 2htdp/image)
 (require 2htdp/universe)
