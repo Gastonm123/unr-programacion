@@ -12,7 +12,7 @@ Integrantes:
 ;Ejercicio 1
 (struct Circunferencia (x y radio))
 ; Circunferencia es (Number, Number, Number)
-; Intepretación: El último elemento es el racio de la circunferencia, mientras que el primero y
+; Intepretación: El último elemento es el radio de la circunferencia, mientras que el primero y
 ; el segundo determinan la coordenada x y la coordenada y, del centro de la circunferencia, respectivamente.
 
 ; Circunferencias para pruebas
@@ -22,7 +22,7 @@ Integrantes:
 
 ;Ejercicio 2
 ; distancia: Circunferencia Circunferencia -> Number
-; distancia: Dadas dos circunferecias develve la distancia entre sus centros.
+; distancia: Dadas dos circunferencias devuelve la distancia entre sus centros.
 (check-expect (distancia C1 C2) 5)
 (check-expect (distancia C1 C3) 5)
 
