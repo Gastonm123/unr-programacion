@@ -11,6 +11,7 @@ Integrantes:
 (struct Circunferencia (x y radio))
 
 ;Ejercicio 2
+;distancia: Circunferencia Cirdunfe
 (define (distancia c c2)
   (sqrt
    (+
