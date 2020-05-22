@@ -11,10 +11,9 @@ Integrantes:
 
 ;Ejercicio 1
 (struct Circunferencia (x y radio))
-(define-struct Texto [s color tam])
 ; Circunferencia es (Number, Number, Number)
-; Intepretación: El último elemento es el racio de la circunferencia, mientras que el segundo y
-; el tercero determinan la coordenada x y la coordenada y, del centro de la circunferencia, respectivamente.
+; Intepretación: El último elemento es el racio de la circunferencia, mientras que el primero y
+; el segundo determinan la coordenada x y la coordenada y, del centro de la circunferencia, respectivamente.
 
 ; Circunferencias para pruebas
 (define C1 (Circunferencia 0 0 2.5))
