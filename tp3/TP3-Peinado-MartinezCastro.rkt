@@ -3,8 +3,8 @@
 Trabajo Práctico 3: Estructuras
 
 Integrantes:
-- [Apellido, Nombre], comisión [número_comisión].
-- [Apellido, Nombre], comisión [número_comisión].
+- Martinez Castro, Gaston, comisión 3.
+- Peinado, Victoria, comisión 4.
 |#
 
 (require test-engine/racket-tests)
