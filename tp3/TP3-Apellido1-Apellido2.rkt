@@ -21,7 +21,7 @@ Integrantes:
 (define C3 (Circunferencia 5 0 5))
 
 ;Ejercicio 2
-; distancia: Circunferencia Cirdunferencia -> Number
+; distancia: Circunferencia Circunferencia -> Number
 ; distancia: Dadas dos circunferecias develve la distancia entre sus centros.
 (check-expect (distancia C1 C2) 5)
 (check-expect (distancia C1 C3) 5)
