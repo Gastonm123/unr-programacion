@@ -32,7 +32,7 @@ Integrantes:
 ;Ejercicio 3
 (define (crear-tangente-exterior c n)
   (Circunferencia
-   (1) ; x
+   (+ (Circunferencia-x c) (Circunferencia-radio c) (* n (Circunferencia-radio c))) ; x
    (Circunferencia-y c) ; y
    (* n (Circunferencia-radio c)) ; radio
   ))
