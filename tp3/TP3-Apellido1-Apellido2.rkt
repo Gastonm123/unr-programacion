@@ -12,23 +12,27 @@ Integrantes:
 
 ;Ejercicio 2
 (define (distancia c c2)
-   (sqrt
-    (+
-     (sqr(-
-          (Circunferencia-x c)
-          (Circunferencia-x c2)
-      ))
-     (sqr(-
-          (Circunferencia-y c )
-          (Circunferencia-y c2)
-      ))
-     )))
+  (sqrt
+   (+
+    (sqr(-
+         (Circunferencia-x c)
+         (Circunferencia-x c2)
+     ))
+    (sqr(-
+         (Circunferencia-y c)
+         (Circunferencia-y c2)
+     ))
+    )))
+
 (define (tangentes-exteriores? c c2)
   (=
    (distancia c c2)
-   (+ (Circunferencia-radio c ) (Circunferencia-radio c2))
-   ))
+   (+ (Circunferencia-radio c) (Circunferencia-radio c2))))
   
 ;Ejercicio 3
-(difine
- )
+(define (crear-tangente-exterior c n)
+  (Circunferencia
+   (1) ; x
+   (Circunferencia-y c) ; y
+   (* n (Circunferencia-radio c)) ; radio
+  ))
