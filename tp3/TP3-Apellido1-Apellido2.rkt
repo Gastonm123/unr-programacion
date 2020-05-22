@@ -32,6 +32,9 @@ Integrantes:
      ))
     )))
 
+(check-expect (distancia C1 C2) 5)
+(check-expect (distancia C1 C3) 5)
+
 ; tangentes-exteriores?: Define si dos circulos tienen un unico punto en comun
 ; y no contiene una a la otra.
 ; tangentes-exteriores?: Circunferencia Circunferencia -> Boolean
@@ -50,5 +53,10 @@ Integrantes:
    (Circunferencia-y c) ; y
    (* n (Circunferencia-radio c)) ; radio
   ))
+
+(define C4 (crear-tangente-exterior C1 2))
+(check-expect (= (Circunferencia-y C1) (Circunferencia-y C4)) #t)
+(check-expect (tangentes-exteriores? C1 C4) #t)
+(check-within (distancia C1 C4) 7.5 0.1)
 
 (test)
