@@ -11,6 +11,10 @@ Integrantes:
 
 ;Ejercicio 1
 (struct Circunferencia (x y radio))
+(define-struct Texto [s color tam])
+; Circunferencia es (Number, Number, Number)
+; Intepretación: El último elemento es el racio de la circunferencia, mientras que el segundo y
+; el tercero determinan la coordenada x y la coordenada y, del centro de la circunferencia, respectivamente.
 
 ; Circunferencias para pruebas
 (define C1 (Circunferencia 0 0 2.5))
@@ -19,7 +23,10 @@ Integrantes:
 
 ;Ejercicio 2
 ; distancia: Circunferencia Cirdunferencia -> Number
-; dadas dos circunferecias develve la distancia entre sus centros
+; distancia: Dadas dos circunferecias develve la distancia entre sus centros.
+(check-expect (distancia C1 C2) 5)
+(check-expect (distancia C1 C3) 5)
+
 (define (distancia c c2)
   (sqrt
    (+
@@ -33,34 +40,38 @@ Integrantes:
      ))
     )))
 
-(check-expect (distancia C1 C2) 5)
-(check-expect (distancia C1 C3) 5)
 
-; tangentes-exteriores?: Define si dos circulos tienen un unico punto en comun
+
+; tangentes-exteriores?: Define si dos circulos tienen un único punto en comun
 ; y no contiene una a la otra.
 ; tangentes-exteriores?: Circunferencia Circunferencia -> Boolean
+(check-expect (tangentes-exteriores? C1 C2) #t)
+(check-expect (tangentes-exteriores? C1 C3) #f)
+
 (define (tangentes-exteriores? c c2)
   (=
    (distancia c c2)
    (+ (Circunferencia-radio c) (Circunferencia-radio c2))))
 
-(check-expect (tangentes-exteriores? C1 C2) #t)
-(check-expect (tangentes-exteriores? C1 C3) #f)
+
   
 ;Ejercicio 3
-; Circuferencia Number -> Circunferencia
-; dada una circunferencia
-(check-error ( -1) "Error el n es menor que 0")
+; crear-tangente-exterior: Circuferencia Integer -> Circunferencia
+; crear-tangente-exterior: Dada una circunferencia C y un entero n mayor a 0, devuelve otra circunferencia C',
+; que está a la derecha C, a la misma altura que C y es tangente exterior de C.
+(check-error (crear-tangente-exterior C1 -1) "Error, n no es mayor a 0 y entero")
+(check-error (crear-tangente-exterior C1 0.5) "Error, n no es mayor a 0 y entero")
+
+
 (define (crear-tangente-exterior c n)
-  (if (positive? n)
+  (if (and (positive? n) (integer? n))
       (Circunferencia
        (+ (Circunferencia-x c) (Circunferencia-radio c) (* n (Circunferencia-radio c))) ; x
        (Circunferencia-y c) ; y
        (* n (Circunferencia-radio c)) ; radio
       )
-      (error "Error el n es menor que 0")
+      (error "Error, n no es mayor a 0 y entero")
    ))
-
 
 (define C4 (crear-tangente-exterior C1 2))
 (check-expect (= (Circunferencia-y C1) (Circunferencia-y C4)) #t)
