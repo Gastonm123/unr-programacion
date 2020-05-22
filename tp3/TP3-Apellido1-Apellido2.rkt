@@ -11,7 +11,8 @@ Integrantes:
 (struct Circunferencia (x y radio))
 
 ;Ejercicio 2
-;distancia: Circunferencia Cirdunfe
+; distancia: Circunferencia Cirdunferencia -> Number
+; dadas dos circunferecias develve la distancia entre sus centros
 (define (distancia c c2)
   (sqrt
    (+
@@ -31,9 +32,15 @@ Integrantes:
    (+ (Circunferencia-radio c) (Circunferencia-radio c2))))
   
 ;Ejercicio 3
+; Circuferencia Number -> Circunferencia
+; dada una circunferencia
+(check-error ( -1) "Error el n es menor que 0")
 (define (crear-tangente-exterior c n)
-  (Circunferencia
-   (+ (Circunferencia-x c) (Circunferencia-radio c) (* n (Circunferencia-radio c))) ; x
-   (Circunferencia-y c) ; y
-   (* n (Circunferencia-radio c)) ; radio
-  ))
+  (if (positive? n)
+      (Circunferencia
+       (+ (Circunferencia-x c) (Circunferencia-radio c) (* n (Circunferencia-radio c))) ; x
+       (Circunferencia-y c) ; y
+       (* n (Circunferencia-radio c)) ; radio
+      )
+      (error "Error el n es menor que 0")
+   ))
