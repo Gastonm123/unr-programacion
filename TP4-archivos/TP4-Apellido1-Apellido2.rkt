@@ -61,6 +61,13 @@ Integrantes:
 
 ; Lista de notificaciones
 ; [Completar, ejercicio 1]
+; fila2noti : List(string) -> List(notificacion)
+; Dada una lista de string, que representa una fila, devuelve una notificación
+(define
+  (fila2noti fila)
+  (make-notificacion (first fila) (second fila) (third fila) (fourth fila) (fifth fila) (sixth fila))
+ )
+(define LISTA-NOTIF(map fila2noti DATOS-NOTIF))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Consultas ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -73,13 +80,39 @@ Integrantes:
 ;;;;;;;;;;;; Consulta 1
 
 ; [Completar, ejercicio 2-1]
+#|(define
+  (dia=dia Notificacion)
+  (string=? HOY (notificacion-fecha Notificacion))
+ )
+(define
+  (casos>=limite Notificacion)
+  (>= (string->number(notificacion-conf Notificacion)) LIMITE-CASOS)
+ )
+(define NOTIFICACIONES-HOY (filter dia=dia LISTA-NOTIF))
+(define CONSULTA1 (filter casos>=limite NOTIFICACIONES-HOY))|#
+(define
+  (predicado-punsulta1 Notificacion)
+  (and(string=? HOY (notificacion-fecha Notificacion))
+      (>= (string->number(notificacion-conf Notificacion)) LIMITE-CASOS))
+ )
 
+(define
+  (localidades-limite-casos notificaciones)
+  (map notificacion-loc (filter predicado-punsulta1 notificaciones))
+ )
 ; [Completar, ejercicio 2-2]
-
+(define LOCALIDADES-LIMITE-CASOS (localidades-limite-casos  LISTA-NOTIF))
 ;;;;;;;;;;;; Consulta 2
 
 ; [Completar, ejercicio 3-1]
-
+(define 
+  (f lista)
+  (cond [(empty? lista) empty]
+        [(notin (first lista) (f(rest lista))) cons((first lista) (f(rest lista)))]
+   )
+  
+ )
+(define LISTA-DPTO (f LISTA-DPTO-LOC))
 ; [Completar, ejercicio 3-2]
 
 ; [Completar, ejercicio 3-3]
