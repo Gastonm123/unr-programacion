@@ -106,13 +106,19 @@ Integrantes:
 
 ; [Completar, ejercicio 3-1]
 (define 
-  (f lista)
+  (listar-departamentos lista)
   (cond [(empty? lista) empty]
-        [(member? (first lista) (f(rest lista))) (f(rest lista))]
-        [else (cons(first lista) (f(rest lista)))]
+        [else (cons (first lista) (f (remove-all (first lista) lista)))]
+   )
+  )
+(define
+  (listar-departamentos-repetidos lista)
+  (cond [(empty? lista) empty]
+        [else (cons (first(first lista)) (g (rest lista)))]
    )
  )
-(define LISTA-DPTO (f LISTA-DPTO-LOC))
+
+(define LISTA-DPTO (listar-departamentos (listar-departamentos-repetidos LISTA-DPTO-LOC)))
 ; [Completar, ejercicio 3-2]
 
 ; [Completar, ejercicio 3-3]
