@@ -108,9 +108,9 @@ Integrantes:
 (define 
   (f lista)
   (cond [(empty? lista) empty]
-        [(notin (first lista) (f(rest lista))) cons((first lista) (f(rest lista)))]
+        [(member? (first lista) (f(rest lista))) (f(rest lista))]
+        [else (cons(first lista) (f(rest lista)))]
    )
-  
  )
 (define LISTA-DPTO (f LISTA-DPTO-LOC))
 ; [Completar, ejercicio 3-2]
