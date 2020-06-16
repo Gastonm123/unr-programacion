@@ -200,17 +200,8 @@ Integrantes:
 ;;;;;;;;;;;; Consulta 1
 
 ; [Completar, ejercicio 4 - loc-lim-casos.csv]
-; Funcion list-to-string
-; table-to-string: list list a' -> string
-; list a' -> string LOCALIDADES-LIMITE-CASOS
-; first string
-; Esta función recibe una lista de filas y devuelve un string formateado de la lista.
-; Las filas pueden ser listas o strings, lo cual depende de los datos de entrada. En
-; el caso de que una fila sea una lista, los elementos de la lista se separan con ","
-; actual = first lista
-; if (string? actual)
-; then actual + "\n" + (table-to-string (rest lista))
-; else (fila2string actual) + "\n" + (tabla2string (rest lista))
+; Función fila2string
+; Completar
 
 ; g : a' String -> String
 (define
@@ -223,6 +214,11 @@ Integrantes:
   (fila2string fila)
   (foldr g "" fila))
 
+; Funcion tabla2string
+; Esta función recibe una lista de filas y devuelve un string formateado de la lista.
+; Las filas pueden ser listas o strings, lo cual depende de los datos de entrada. En
+; el caso de que una fila sea una lista, los elementos de la lista se separan con ","
+
 (define
   (f a b)
   (cond [(string? a) (string-append "\"" a "\"" "\n" b)]
@@ -233,9 +229,13 @@ Integrantes:
   (tabla2string lista)
   (foldr f "" lista))
 
-(write-file "loc-lim-casos.csv" (tabla2string LOCALIDADES-LIMITE-CASOS))
+(define CABECERAS-LIM-CASOS "Localidad\n")
+(write-file "loc-lim-casos.csv" (string-append CABECERAS-LIM-CASOS (tabla2string LOCALIDADES-LIMITE-CASOS)))
 
 ;;;;;;; Consulta 2
 
 ; [Completar, ejercicio 4 - casos-por-dpto-hoy.csv y casos-por-dpto-antes.csv]
-(write-file "casos-por-dpto-hoy.csv" (tabla2string CONFIRMADOS-DPTO-HOY))
+
+(define CABECERAS-CONFIRMADOS "Departamento,Confirmados\n")
+(write-file "casos-por-dpto-hoy.csv" (string-append CABECERAS-CONFIRMADOS (tabla2string CONFIRMADOS-DPTO-HOY)))
+(write-file "casos-por-dpto-antes.csv" (string-append CABECERAS-CONFIRMADOS (tabla2string CONFIRMADOS-DPTO-ANTES)))
