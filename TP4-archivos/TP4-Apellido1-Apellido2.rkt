@@ -64,16 +64,18 @@ Integrantes:
 ; fila2noti : List(string) -> notificacion
 ; Dada una lista de strings, que representa una fila, devuelve una notificación
 (check-expect (fila2noti (list "a" "b" "1" "2" "3" "4")) (make-notificacion "a" "b" 1 2 3 4))
-
+(check-error (fila2noti (list "a" "b" "1")) "fila muy cotra")
+(check-expect (fila2noti (list "a" "b" "f" "1" "2" "3" )) (make-notificacion "a" "b" 0 1 2 3 ))
 (define
   (fila2noti fila)
-  (make-notificacion (first fila)
-                     (second fila)
-                     (string->number(third fila))
-                     (string->number(fourth fila))
-                     (string->number(fifth fila))
-                     (string->number(sixth fila))
- ))
+  (cond [(>=(length fila)6)(make-notificacion (first fila)
+                                               (second fila)
+                                               (if (number? (string->number(third fila))) (string->number(third fila)) 0)
+                                               (if (number? (string->number(fourth fila))) (string->number(fourth fila)) 0)
+                                               (if (number? (string->number(fifth fila))) (string->number(fifth fila)) 0)
+                                               (if (number? (string->number(sixth fila))) (string->number(sixth fila))0))]
+        [(<(length fila)6)  (error  "fila muy cotra")] ))
+
 
  
 (define LISTA-NOTIF (map fila2noti DATOS-NOTIF))
