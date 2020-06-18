@@ -5,8 +5,8 @@
 Trabajo Práctico 4: Listas
 
 Integrantes:
-- [Apellido, Nombre], comisión [número_comisión].
-- [Apellido, Nombre], comisión [número_comisión].
+- Martinez Castro, Gaston, comisión 3.
+- Peinado, Victoria, comisión 4.
 |#
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -61,13 +61,19 @@ Integrantes:
 
 ; Lista de notificaciones
 ; [Completar, ejercicio 1]
-; fila2noti : List(string) -> List(notificacion)
-; Dada una lista de string, que representa una fila, devuelve una notificación
+; fila2noti : List(string) -> notificacion
+; Dada una lista de strings, que representa una fila, devuelve una notificación
 (define
   (fila2noti fila)
-  (make-notificacion (first fila) (second fila) (third fila) (fourth fila) (fifth fila) (sixth fila))
- )
-(define LISTA-NOTIF(map fila2noti DATOS-NOTIF))
+  (make-notificacion (first fila)
+                     (second fila)
+                     (string->number(third fila))
+                     (string->number(fourth fila))
+                     (string->number(fifth fila))
+                     (string->number(sixth fila))
+ ))
+  
+(define LISTA-NOTIF (map fila2noti DATOS-NOTIF))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Consultas ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -80,22 +86,21 @@ Integrantes:
 ;;;;;;;;;;;; Consulta 1
 
 ; [Completar, ejercicio 2-1]
-#|(define
-  (dia=dia Notificacion)
-  (string=? HOY (notificacion-fecha Notificacion))
- )
-(define
-  (casos>=limite Notificacion)
-  (>= (string->number(notificacion-conf Notificacion)) LIMITE-CASOS)
- )
-(define NOTIFICACIONES-HOY (filter dia=dia LISTA-NOTIF))
-(define CONSULTA1 (filter casos>=limite NOTIFICACIONES-HOY))|#
+; predicado-consulta1 : notificacion -> Boolean
+; Dada una notificacion devuelve verdadero si la notificacion es de HOY
+; y los casos superan LIMITE-CASOS
+(check-expect #f (predicado-consulta1 (make-notificacion HOY "Rosario" 10 0 0 0)))
+(check-expect #t (predicado-consulta1 (make-notificacion HOY "Rosario" LIMITE-CASOS 0 0 0)))
+
 (define
   (predicado-consulta1 Notificacion)
   (and(string=? HOY (notificacion-fecha Notificacion))
-      (>= (string->number(notificacion-conf Notificacion)) LIMITE-CASOS))
+      (>= (notificacion-conf Notificacion) LIMITE-CASOS))
  )
 
+; localidades-limite-casos : List(notificacion) -> List(string)
+; Dada una lista de notificaciones devuelve las localidades que evaluan
+; verdadero al predicado-consulta1
 (define
   (localidades-limite-casos notificaciones)
   (map notificacion-loc (filter predicado-consulta1 notificaciones))
@@ -106,24 +111,33 @@ Integrantes:
 ;;;;;;;;;;;; Consulta 2
 
 ; [Completar, ejercicio 3-1]
+; borrar-repeticiones : List(string) -> List(string)
+; Dado una lista de strings devuelve una lista con los mismos strings
+; sin repeticiones
+(check-expect (list "Rosario" "Firmat") (borrar-repeticiones (list "Rosario" "Rosario" "Firmat")))
+
 (define 
   (borrar-repeticiones lista)
   (cond [(empty? lista) empty]
         [else (cons (first lista) (borrar-repeticiones (remove-all (first lista) lista)))]
-   )
-  )
+  ))
+
+; listar-departamentos : List(List(string)) -> List(string)
+; Dada una lista de departamentos y localidades devuelve una lista
+; de los departamentos
+(check-expect (listar-departamentos (list (list "BELGRANO" "ARMSTRONG") (list "BELGRANO" "BOUQUET"))) (list "BELGRANO" "BELGRANO"))
+
 (define
   (listar-departamentos lista)
   (cond [(empty? lista) empty]
         [else (cons (first(first lista)) (listar-departamentos (rest lista)))]
-   )
- )
+  ))
 
 (define LISTA-DPTO (borrar-repeticiones (listar-departamentos LISTA-DPTO-LOC)))
 
 ; [Completar, ejercicio 3-2]
-; Funcion listar-localidades-dpto
-; Dado un departamento y una lista de departamentos y localidades te devuelve una
+; listar-localidades-dpto : string List(List(string)) -> List(string)
+; Dado un departamento y una lista de departamentos y localidades devuelve una
 ; lista de las localidades de ese departamento
 (check-expect
  (listar-localidades-dpto "9 de Julio" LISTA-DPTO-LOC)
@@ -142,7 +156,7 @@ Integrantes:
                (listar-localidades-dpto dpto (rest lista)))])
   )
 
-; Funcion confirmados-dpto-fecha
+; confirmados-dpto-fecha : string List(notificacion) -> number
 ; Dados una lista de notificaciones, un dpto y una fecha devuelve el total de casos confirmados
 ; en el dpto a la fecha. Las localidades del departamento que se cuentan son las de LISTA-DPTO-LOC
 (check-expect (confirmados-dpto-fecha "Belgrano" HOY LISTA-NOTIF) 5)
@@ -158,7 +172,7 @@ Integrantes:
                 (member (notificacion-loc (first lista))
                         (listar-localidades-dpto dpto LISTA-DPTO-LOC)))
                ; si
-               (+ (string->number (notificacion-conf (first lista))) (confirmados-dpto-fecha dpto fecha (rest lista)))
+               (+ (notificacion-conf (first lista)) (confirmados-dpto-fecha dpto fecha (rest lista)))
                ; sino
                (confirmados-dpto-fecha dpto fecha (rest lista)))]))
 
@@ -168,7 +182,7 @@ Integrantes:
 ; dos conteniendo, en primera posicion un dpto. y en segundo lugar el numero de casos para
 ; ese departamento a la fecha. La lista contiene todos los departamentos de LISTA-DPTO
 ; Utilizamos una función auxiliar listar-confirmados-dpto que recursiona sobre la lista
-; de departamentos para devolver el mismo que resultado que confirmados-por-dpto
+; de departamentos
 (check-expect (confirmados-por-dpto HOY LISTA-NOTIF)
               (list
                (list "9 de Julio" 0) (list "Belgrano" 5) (list "Caseros" 3) (list "Castellanos" 22)
@@ -177,6 +191,7 @@ Integrantes:
                (list "San Cristóbal" 0) (list "San Javier" 1) (list "San Jerónimo" 10) (list "San Justo" 0)
                (list "San Lorenzo" 17) (list "San Martín" 0) (list "Vera" 1)))
 
+; listar-confirmados-dpto : string List(notificacion) List(string) -> List(List(string, number))
 (define
   (listar-confirmados-dpto fecha lista-notif lista-dpto)
   (cond [(empty? lista-dpto) empty]
@@ -184,6 +199,7 @@ Integrantes:
                           (confirmados-dpto-fecha (first lista-dpto) fecha lista-notif))
                     (listar-confirmados-dpto fecha lista-notif (rest lista-dpto)))]))
 
+; confirmados-por-dpto : string List(notificacion) -> List(List(string, number))
 (define
   (confirmados-por-dpto fecha lista)
   (listar-confirmados-dpto fecha lista LISTA-DPTO))
@@ -197,37 +213,62 @@ Integrantes:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Salidas ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Datos ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;; Diseño de datos
+
+; Modelamos tablas como listas de filas
+; Modelamos filas como una variable b' que puede ser lista de campos o String
+; Modelamos los campos como una variable a' que puede ser String o Number
+
 ;;;;;;;;;;;; Consulta 1
 
 ; [Completar, ejercicio 4 - loc-lim-casos.csv]
 ; Función fila2string
-; Completar
+; Dada una lista de campos devuelve un string representando la fila
 
-; g : a' String -> String
+; unir-campos : a' String -> String
+; Es una funcion pensada para ser usada en un foldr
+; Dados un campo y un string devuelve un string conteniendo al campo
+; y al string
+(check-expect "\"Manzana\",\"Pera\",\"Banana\"," (fila2string (list "Manzana" "Pera" "Banana")))
+(check-expect "\"Manzanas\",\"2\"," (fila2string (list "Manzanas" "2")))
+
 (define
-  (g a b)
-  (cond [(string? a) (string-append "\"" a "\"" "," b)]
-        [(number? a) (string-append "\"" (number->string a) "\"" "," b)]
+  (unir-campos campo resto)
+  (cond [(string? campo) (string-append "\"" campo "\"," resto)]
+        [(number? campo) (string-append "\"" (number->string campo) "\"," resto)]
         [else ""]))
 
+; fila2string : List(a') -> String
 (define
   (fila2string fila)
-  (foldr g "" fila))
+  (foldr unir-campos "" fila))
 
 ; Funcion tabla2string
 ; Esta función recibe una lista de filas y devuelve un string formateado de la lista.
 ; Las filas pueden ser listas o strings, lo cual depende de los datos de entrada. En
 ; el caso de que una fila sea una lista, los elementos de la lista se separan con ","
 
-(define
-  (f a b)
-  (cond [(string? a) (string-append "\"" a "\"" "\n" b)]
-        [(list? a) (string-append (fila2string a) "\n" b)]
-        [else ""]))
+; unir-filas : b' String -> String
+; Es una funcion pensada para ser usada en un foldr
+; Dados una fila y un string devuelve un string conteniendo a la fila
+; y al string
+(check-expect "\"ROSARIO\"\n\"SANTA FE\"\n" (tabla2string LOCALIDADES-LIMITE-CASOS))
+(check-expect "\"Manzanas\",\"2\",\n" (tabla2string (list (list "Manzanas" 2))))
 
 (define
+  (unir-filas fila resto)
+  (cond [(string? fila) (string-append "\"" fila "\"\n" resto)]
+        [(list? fila) (string-append (fila2string fila) "\n" resto)]
+        [else ""]))
+
+; tabla2string : List(b') -> String
+(define
   (tabla2string lista)
-  (foldr f "" lista))
+  (foldr unir-filas "" lista))
 
 (define CABECERAS-LIM-CASOS "Localidad\n")
 (write-file "loc-lim-casos.csv" (string-append CABECERAS-LIM-CASOS (tabla2string LOCALIDADES-LIMITE-CASOS)))
