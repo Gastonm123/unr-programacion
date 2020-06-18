@@ -63,6 +63,8 @@ Integrantes:
 ; [Completar, ejercicio 1]
 ; fila2noti : List(string) -> notificacion
 ; Dada una lista de strings, que representa una fila, devuelve una notificación
+(check-expect (fila2noti (list "a" "b" "1" "2" "3" "4")) (make-notificacion "a" "b" 1 2 3 4))
+
 (define
   (fila2noti fila)
   (make-notificacion (first fila)
@@ -72,7 +74,8 @@ Integrantes:
                      (string->number(fifth fila))
                      (string->number(sixth fila))
  ))
-  
+
+ 
 (define LISTA-NOTIF (map fila2noti DATOS-NOTIF))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -89,8 +92,8 @@ Integrantes:
 ; predicado-consulta1 : notificacion -> Boolean
 ; Dada una notificacion devuelve verdadero si la notificacion es de HOY
 ; y los casos superan LIMITE-CASOS
-(check-expect #f (predicado-consulta1 (make-notificacion HOY "Rosario" 10 0 0 0)))
-(check-expect #t (predicado-consulta1 (make-notificacion HOY "Rosario" LIMITE-CASOS 0 0 0)))
+(check-expect (predicado-consulta1 (make-notificacion HOY "Rosario" 10 0 0 0)) #f)
+(check-expect (predicado-consulta1 (make-notificacion HOY "Rosario" LIMITE-CASOS 0 0 0)) #t)
 
 (define
   (predicado-consulta1 Notificacion)
@@ -101,6 +104,9 @@ Integrantes:
 ; localidades-limite-casos : List(notificacion) -> List(string)
 ; Dada una lista de notificaciones devuelve las localidades que evaluan
 ; verdadero al predicado-consulta1
+(check-expect (localidades-limite-casos LISTA-NOTIF) (list "ROSARIO" "SANTA FE"))
+(check-expect (localidades-limite-casos empty)  empty)
+(check-expect (localidades-limite-casos (list (make-notificacion  HOY "Rosario" 30 0 0 0))) (list "Rosario"))
 (define
   (localidades-limite-casos notificaciones)
   (map notificacion-loc (filter predicado-consulta1 notificaciones))
@@ -114,7 +120,9 @@ Integrantes:
 ; borrar-repeticiones : List(string) -> List(string)
 ; Dado una lista de strings devuelve una lista con los mismos strings
 ; sin repeticiones
-(check-expect (list "Rosario" "Firmat") (borrar-repeticiones (list "Rosario" "Rosario" "Firmat")))
+(check-expect (borrar-repeticiones (list "Rosario" "Rosario" "Firmat")) (list "Rosario" "Firmat"))
+(check-expect (borrar-repeticiones (list "R" "R" "F" "F" "A")) (list "R" "F" "A"))
+(check-expect (borrar-repeticiones empty) empty)
 
 (define 
   (borrar-repeticiones lista)
@@ -126,10 +134,13 @@ Integrantes:
 ; Dada una lista de departamentos y localidades devuelve una lista
 ; de los departamentos
 (check-expect (listar-departamentos (list (list "BELGRANO" "ARMSTRONG") (list "BELGRANO" "BOUQUET"))) (list "BELGRANO" "BELGRANO"))
+(check-expect (listar-departamentos empty) empty)
+(check-expect (listar-departamentos (list empty)) empty)
 
 (define
   (listar-departamentos lista)
   (cond [(empty? lista) empty]
+        [(empty? (first lista)) empty]
         [else (cons (first(first lista)) (listar-departamentos (rest lista)))]
   ))
 
@@ -147,6 +158,8 @@ Integrantes:
  (listar-localidades-dpto "Belgrano" LISTA-DPTO-LOC)
  (list "ARMSTRONG" "BOUQUET" "LAS PAREJAS" "LAS ROSAS" "MONTES DE OCA" "TORTUGAS"))
 
+(check-expect (listar-localidades-dpto "Belgrano" empty) empty)
+
 (define
   (listar-localidades-dpto dpto lista)
   (cond [(empty? lista) empty]
@@ -161,7 +174,7 @@ Integrantes:
 ; en el dpto a la fecha. Las localidades del departamento que se cuentan son las de LISTA-DPTO-LOC
 (check-expect (confirmados-dpto-fecha "Belgrano" HOY LISTA-NOTIF) 5)
 (check-expect (confirmados-dpto-fecha "9 de Julio" HOY LISTA-NOTIF) 0)
-
+(check-expect (confirmados-dpto-fecha "Belgrano" HOY empty) 0)
 (define
   (confirmados-dpto-fecha dpto fecha lista)
   (cond [(empty? lista) 0]
@@ -190,6 +203,13 @@ Integrantes:
                (list "Iriondo" 7) (list "La Capital" 37) (list "Las Colonias" 4) (list "Rosario" 124)
                (list "San Cristóbal" 0) (list "San Javier" 1) (list "San Jerónimo" 10) (list "San Justo" 0)
                (list "San Lorenzo" 17) (list "San Martín" 0) (list "Vera" 1)))
+(check-expect (confirmados-por-dpto HOY empty)
+              (list
+               (list "9 de Julio" 0) (list "Belgrano" 0) (list "Caseros" 0) (list "Castellanos" 0)
+               (list "Constitución" 0) (list "Garay" 0) (list "General López" 0) (list "General Obligado" 0)
+               (list "Iriondo" 0) (list "La Capital" 0) (list "Las Colonias" 0) (list "Rosario" 0)
+               (list "San Cristóbal" 0) (list "San Javier" 0) (list "San Jerónimo" 0) (list "San Justo" 0)
+               (list "San Lorenzo" 0) (list "San Martín" 0) (list "Vera" 0)))
 
 ; listar-confirmados-dpto : string List(notificacion) List(string) -> List(List(string, number))
 (define
@@ -233,8 +253,8 @@ Integrantes:
 ; Es una funcion pensada para ser usada en un foldr
 ; Dados un campo y un string devuelve un string conteniendo al campo
 ; y al string
-(check-expect "\"Manzana\",\"Pera\",\"Banana\"," (fila2string (list "Manzana" "Pera" "Banana")))
-(check-expect "\"Manzanas\",\"2\"," (fila2string (list "Manzanas" "2")))
+(check-expect "\"a\",b" (unir-campos "a" "b"))
+(check-expect "\"0\",b" (unir-campos 0 "b"))
 
 (define
   (unir-campos campo resto)
@@ -243,6 +263,11 @@ Integrantes:
         [else ""]))
 
 ; fila2string : List(a') -> String
+;Dada una lista devuelve un string formateado por la función unir-campos.
+(check-expect "\"Manzana\",\"Pera\",\"Banana\"," (fila2string (list "Manzana" "Pera" "Banana")))
+(check-expect "\"Manzanas\",\"2\"," (fila2string (list "Manzanas" "2")))
+(check-expect "" (fila2string empty))
+
 (define
   (fila2string fila)
   (foldr unir-campos "" fila))
@@ -266,17 +291,21 @@ Integrantes:
         [else ""]))
 
 ; tabla2string : List(b') -> String
+;Dada una lista devuelve un string formateado por la función unir-filas.
+(check-expect (tabla2string (list "a" "b"))"\"a\"\n\"b\"\n")
+(check-expect (tabla2string (list (list "a" "b"))) "\"a\",\"b\",\n")
+(check-expect (tabla2string empty) "")
 (define
   (tabla2string lista)
   (foldr unir-filas "" lista))
 
-(define CABECERAS-LIM-CASOS "Localidad\n")
+(define CABECERAS-LIM-CASOS "\"Localidad\"\n")
 (write-file "loc-lim-casos.csv" (string-append CABECERAS-LIM-CASOS (tabla2string LOCALIDADES-LIMITE-CASOS)))
 
 ;;;;;;; Consulta 2
 
 ; [Completar, ejercicio 4 - casos-por-dpto-hoy.csv y casos-por-dpto-antes.csv]
 
-(define CABECERAS-CONFIRMADOS "Departamento,Confirmados\n")
+(define CABECERAS-CONFIRMADOS "\"Departamento\",\"Confirmados\"\n")
 (write-file "casos-por-dpto-hoy.csv" (string-append CABECERAS-CONFIRMADOS (tabla2string CONFIRMADOS-DPTO-HOY)))
 (write-file "casos-por-dpto-antes.csv" (string-append CABECERAS-CONFIRMADOS (tabla2string CONFIRMADOS-DPTO-ANTES)))
