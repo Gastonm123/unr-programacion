@@ -74,7 +74,7 @@ Integrantes:
                                                (if (number? (string->number(fourth fila))) (string->number(fourth fila)) 0)
                                                (if (number? (string->number(fifth fila))) (string->number(fifth fila)) 0)
                                                (if (number? (string->number(sixth fila))) (string->number(sixth fila))0))]
-        [(<(length fila)6)  (error  "fila muy cotra")] ))
+        [else  (error  "fila muy cotra")] ))
 
 
  
@@ -165,10 +165,8 @@ Integrantes:
 (define
   (listar-localidades-dpto dpto lista)
   (cond [(empty? lista) empty]
-        [else (if
-               (string=? dpto (first(first lista)))
-               (cons (second(first lista)) (listar-localidades-dpto dpto (rest lista)))
-               (listar-localidades-dpto dpto (rest lista)))])
+        [(string=? dpto (first(first lista))) (cons (second(first lista)) (listar-localidades-dpto dpto (rest lista)))]
+        [else (listar-localidades-dpto dpto (rest lista))])
   )
 
 ; confirmados-dpto-fecha : string List(notificacion) -> number
@@ -180,16 +178,11 @@ Integrantes:
 (define
   (confirmados-dpto-fecha dpto fecha lista)
   (cond [(empty? lista) 0]
-        [else (if
-               ; condicion
-               (and
-                (string=? (notificacion-fecha (first lista)) fecha)
-                (member (notificacion-loc (first lista))
-                        (listar-localidades-dpto dpto LISTA-DPTO-LOC)))
-               ; si
-               (+ (notificacion-conf (first lista)) (confirmados-dpto-fecha dpto fecha (rest lista)))
-               ; sino
-               (confirmados-dpto-fecha dpto fecha (rest lista)))]))
+        [(and(string=? (notificacion-fecha (first lista)) fecha)
+             (member (notificacion-loc (first lista))
+                     (listar-localidades-dpto dpto LISTA-DPTO-LOC))) (+ (notificacion-conf (first lista)) (confirmados-dpto-fecha dpto fecha (rest lista)))
+         ]
+        [else (confirmados-dpto-fecha dpto fecha (rest lista))]))
 
 ; [Completar, ejercicio 3-3]
 ; Funcion confirmados-por-dpto
