@@ -35,16 +35,16 @@ Integrantes:
 ;;;; Ejercicio 2-1
 
 ; Costo de los recorridos válidos:
-; * [Completar]
-; * [Completar]
-; * [Completar]
-; * [Completar]
-; * [Completar]
-; * [Completar]
-; * [Completar]
-; * [Completar]
-; * [Completar]
-; * [Completar]
+; Recorrido 1 : (0,0) (1,0) (2,0) (3,0) (3,1) (3,2). Costo : 20 
+; Recorrido 2 : (0,0) (1,0) (2,0) (2,1) (3,1) (3,2). Costo : 13
+; Recorrido 3 : (0,0) (1,0) (2,0) (2,1) (2,2) (3,2). Costo : 12
+; Recorrido 4 : (0,0) (1,0) (1,1) (2,1) (3,1) (3,2). Costo : 21
+; Recorrido 5 : (0,0) (1,0) (1,1) (2,1) (2,2) (3,2). Costo : 20
+; Recorrido 6 : (0,0) (1,0) (1,1) (1,2) (2,2) (3,2). Costo : 21
+; Recorrido 7 : (0,0) (0,1) (1,1) (2,1) (3,1) (3,2). Costo : 18
+; Recorrido 8 : (0,0) (0,1) (1,1) (2,1) (2,2) (3,2). Costo : 17
+; Recorrido 9 : (0,0) (0,1) (1,1) (1,2) (2,2) (3,2). Costo : 18
+; Recorrido 10: (0,0) (0,1) (0,2) (1,2) (2,2) (3,2). Costo : -2
 
 ;;;; Ejercicio 2-2
 #|
