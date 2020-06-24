@@ -75,4 +75,7 @@ maximoCosto(i, j) = <
 
 ;;;; Ejercicio 2-4
 
-; [COMPLETAR]
+(define
+  (maximo-costo-tablero tab)
+  (maximo-costo tab (- (length tab)1) (- (length(first tab))1))
+ )
