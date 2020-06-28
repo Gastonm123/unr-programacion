@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-intermediate-reader.ss" "lang")((modname TP5-Apellido1-Apellido2) (read-case-sensitive #t) (teachpacks ((lib "batch-io.rkt" "teachpack" "2htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "batch-io.rkt" "teachpack" "2htdp")) #f)))
+#reader(lib "htdp-intermediate-reader.ss" "lang")((modname TP5-Martinez-Peinado) (read-case-sensitive #t) (teachpacks ((lib "batch-io.rkt" "teachpack" "2htdp"))) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ((lib "batch-io.rkt" "teachpack" "2htdp")) #f)))
 #|
 Trabajo Práctico 5: Naturales
 
@@ -16,7 +16,7 @@ Integrantes:
 
 ;;;;;;;; Ejercicio 1
 
-; subir: Natural->Natural
+; subir: Natural -> Natural
 ; Dada la cantidad de escalones devuelve la cantidad de formas diferentes en las que podes subir la escalera
 ; subiendo de a 1 escalon, de a 3 escalones y de a 5 escalones
 (check-expect (subir 1) 1)
@@ -28,9 +28,10 @@ Integrantes:
 (check-expect (subir 6) 8)
 (define
   (subir x)
-  (cond [(zero? x) 1]
-        [(negative? x) 0]
-        [else (+ (subir (- x 5))(subir (- x 3))(subir (- x 1)))]
+  (cond [(>= x 5) (+ (subir (- x 5))(subir (- x 3))(subir (- x 1)))] 
+        [(>= x 3) (+ (subir (- x 3))(subir (- x 1)))]
+        [(>= x 1) (+ (subir (- x 1)))]
+        [(zero? x) 1]
     )
 )
 
@@ -66,13 +67,24 @@ maximoCosto(i, j) = <
 
 (define TABLERO (list (list -5 10) (list 0 -2) (list 9 3)))
 
-; valor : List(List Number) Number Number -> Number
+; valor : List(List Number) Natural Natural -> Number
 ; Funcion valor toma una lista de listas y dos indices y devuelve el
 ; valor en el indice [i][j]
 (check-expect (valor TABLERO 0 0) -5)
 (check-expect (valor TABLERO 1 1) -2)
 (define (valor tab i j)
-  (list-ref (list-ref tab i)j))
+  (list-ref (list-ref tab i) j))
+
+; valor-seguro : List(List Number) Natural Natural -> Number
+; Funcion valor-seguro valida que los indices pasados a la funcion
+; valor sean validos
+(check-error (valor-seguro TABLERO 0 2) "Indice muy grande")
+(check-error (valor-seguro TABLERO 3 1) "Indice muy grande")
+(check-error (valor-seguro empty   0 0) "Indice muy grande")
+(define (valor-seguro tab i j)
+  (cond [(<= (length tab) i) (error "Indice muy grande")]
+        [(<= (length (first tab)) j) (error "Indice muy grande")]
+        [else (valor tab i j)]))
 
 ; maximo-costo : List(List Number) Number Number -> Number
 ; Funcion maximo-costo toma un mapa y la posicion a la que se quiere llegar
@@ -81,10 +93,10 @@ maximoCosto(i, j) = <
 (check-expect (maximo-costo TABLERO 1 1) 3)
 (define
   (maximo-costo tab i j)
-  (cond [(= 0 i j) (valor tab i j)]
-        [(= 0 i) (+ (valor tab i j) (maximo-costo tab i (- j 1)))]
-        [(= 0 j) (+ (valor tab i j) (maximo-costo tab (- i 1) j))]
-        [else (+ (valor tab i j) (max (maximo-costo tab i (- j 1)) (maximo-costo tab (- i 1) j)))]
+  (cond [(= 0 i j) (valor-seguro tab i j)]
+        [(= 0 i) (+ (valor-seguro tab i j) (maximo-costo tab i (- j 1)))]
+        [(= 0 j) (+ (valor-seguro tab i j) (maximo-costo tab (- i 1) j))]
+        [else (+ (valor-seguro tab i j) (max (maximo-costo tab i (- j 1)) (maximo-costo tab (- i 1) j)))]
         )
   )
 
@@ -96,5 +108,5 @@ maximoCosto(i, j) = <
 (check-expect (maximo-costo-tablero TABLERO) 7)
 (define
   (maximo-costo-tablero tab)
-  (maximo-costo tab (- (length tab)1) (- (length(first tab))1))
+  (maximo-costo tab (- (length tab) 1) (- (length(first tab)) 1))
  )
