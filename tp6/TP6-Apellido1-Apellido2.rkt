@@ -92,5 +92,17 @@ Integrantes:
   (map P (valuaciones n)))
 
 ;;;;;;;; Ejercicio 5
+(define (Y x y )(and x y))
+(define
+  (tautología? P n)
+  (foldr Y #t(evaluar P n)))
 
-; [Completar]
+(define (O x y )(or x y))
+(define
+  (satisfactible? P n)
+  (foldr O #f(evaluar P n)))
+
+
+(define
+  (contradiccion? P n)
+  (not (satisfactible? P n)))
