@@ -20,8 +20,7 @@ Integrantes:
 (define
   (implica p q)
   (cond [(false? p) #t]
-        [q #t]
-        [else #f]))
+        [else q]))
 
 ; equivalente : Boolean Boolean -> Boolean
 ; dados dos booleanos debuelve el reultado de la equivalencia entre ambos
@@ -42,17 +41,16 @@ Integrantes:
   (crear-fila pos n)
   (cond [(= n 0) empty]
         [else
-         (cons  (floor (/(modulo pos (expt 2 n)) (expt 2 (- n 1))))
-               (crear-fila pos (- n 1)))]))
+        (cons (zero?(remainder pos 2)) (crear-fila(quotient pos 2) (- n 1)))]))
 
 (define
   (crear-valuaciones n filas)
-  (cond [(= filas 1) (cons (crear-fila filas n) empty)]
-        [else (cons (crear-fila filas n)(crear-valuaciones n (- filas 1 ) ))]))
+  (cond [(= filas 0) (cons (crear-fila filas n) empty)]
+        [else (cons(reverse (crear-fila filas n))(crear-valuaciones n (- filas 1 ) ))]))
 
 (define
   (valuaciones n)
-  (crear-valuaciones n (expt 2 n)))
+  (crear-valuaciones n (-(expt 2 n) 1)))
   
 
 ;;;;;;;; Ejercicio 3
@@ -67,12 +65,31 @@ Integrantes:
                     (implica p2 p3))
                (implica (or p1 p2)
                         p3))))
+(define
+  (B l)
+  (let ([p1 (first l)]
+        [p2 (second l)]
+        [p3 (third l)])
+  (equivalente(implica (and p1 p2)
+                       p3)
+              (and (implica p1 p3)
+                    (implica p2 p3)))))
+(define
+  (C l)
+  (let ([p1 (first l)]
+        [p2 (second l)])
+  (equivalente(or (not p1)(not p2))
+              (and p1 p2))))
 
-; [Completar]
+(define  valuacion-B (B (list #t #t #t)))
+(define  valuacion-C (C (list #t #t)))
+
 
 ;;;;;;;; Ejercicio 4
 
-; [Completar]
+(define
+  (evaluar P n)
+  (map P (valuaciones n)))
 
 ;;;;;;;; Ejercicio 5
 
