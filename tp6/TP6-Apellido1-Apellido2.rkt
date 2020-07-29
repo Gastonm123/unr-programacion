@@ -4,8 +4,8 @@
 #| Trabajo Práctico 6
 
 Integrantes:
-- [Apellido, Nombre], comisión [número_comisión].
-- [Apellido, Nombre], comisión [número_comisión].
+- [Martinez Castro, Gaston], comisión 3.
+- [Peinado, Victoria], comisión 4.
 |#
 
 ;;;;;;;; Ejercicio 1
@@ -36,18 +36,28 @@ Integrantes:
 
 ;;;;;;;; Ejercicio 2
 
-; [Completar]
+; crear-fila: Integer Integer -> List(Integer)
+; Funcion crear-fila. La funcion tomar fila toma un numero indicando
+; la fila y la cantidad de variables y devuelve una lista con el estado
+; de las variables para esa fila
 (define
-  (crear-fila pos n)
+  (crear-fila fila n)
   (cond [(= n 0) empty]
         [else
-        (cons (zero?(remainder pos 2)) (crear-fila(quotient pos 2) (- n 1)))]))
+        (cons (zero?(remainder fila 2)) (crear-fila(quotient fila 2) (- n 1)))]))
 
+; crear-valuaciones: Integer Integer -> List(List(Integer))
+; Funcion crear-valuaciones. La función toma un numero de variables 
+; y un numero de filas y devuelve una lista con todos los estados no
+; repetidos para cada variables
 (define
   (crear-valuaciones n filas)
   (cond [(= filas 0) (cons (crear-fila filas n) empty)]
         [else (cons(reverse (crear-fila filas n))(crear-valuaciones n (- filas 1 ) ))]))
 
+; valuaciones: Integer -> List(List(Integer))
+; Funcion valuaciones. La función toma un numero de variables y devuelve
+; todos los estados posibles, no repetidos, para cada variable.
 (define
   (valuaciones n)
   (crear-valuaciones n (-(expt 2 n) 1)))
@@ -56,6 +66,11 @@ Integrantes:
 ;;;;;;;; Ejercicio 3
 
 ; A : List(Boolean) -> Boolean
+; B : List(Boolean) -> Boolean
+; C : List(Boolean) -> Boolean
+; Funciones A, B y C representando formulas proposicionales proporsionadas
+; para el ejercicio
+
 (define
   (A l)
   (let ([p1 (first l)]
@@ -87,22 +102,41 @@ Integrantes:
 
 ;;;;;;;; Ejercicio 4
 
+; evaluar: List(Boolean) -> Boolean Integer -> List(Boolean)
+; Función evaluar. Toma una función representando una formula proposicional
+; y la cantidad de variables y devuelve una lista de resultados para todas
+; las valuaciones de las variables.
 (define
   (evaluar P n)
   (map P (valuaciones n)))
 
 ;;;;;;;; Ejercicio 5
+
+; Y: Boolean Boolean -> Boolean
+; Funcion Y. Toma dos booleanos y devuelve al and de ambos
 (define (Y x y )(and x y))
+
+; tautologia?: List(Boolean) -> Boolean Integer -> Boolean
+; Funcion tautologia?. Toma una función representando una formula proposicional
+; y la cantidad de variables e informa si es una tautología.
 (define
   (tautología? P n)
   (foldr Y #t(evaluar P n)))
 
+; O: Boolean Boolean -> Boolean
+; Funcion O. Toma dos booleanos y devuelve el or de ambos
 (define (O x y )(or x y))
+
+; satisfactible?: List(Boolean) -> Boolean Integer -> Boolean
+; Funcion satisfactible?. Toma una función representado una formala proposicional
+; y la cantidad de variables e informa si es satisfactible.
 (define
   (satisfactible? P n)
   (foldr O #f(evaluar P n)))
 
-
+; contradiccion?: List(Boolean) -> Boolean Integer -> Boolean
+; Funcion contradiccion?. Toma una función representando una formula proposicional
+; y la cantidad de variable e informa si es una contradiccion.
 (define
   (contradiccion? P n)
   (not (satisfactible? P n)))
