@@ -40,6 +40,10 @@ Integrantes:
 ; Funcion crear-fila. La funcion tomar fila toma un numero indicando
 ; la fila y la cantidad de variables y devuelve una lista con el estado
 ; de las variables para esa fila
+(check-expect (crear-fila 1 1) (list #false))
+(check-expect (crear-fila 0 1) (list #true))
+(check-expect (crear-fila 0 2) (list #true #true))
+(check-expect (crear-fila 3 2) (list #false #false))
 (define
   (crear-fila fila n)
   (cond [(= n 0) empty]
@@ -50,6 +54,8 @@ Integrantes:
 ; Funcion crear-valuaciones. La función toma un numero de variables 
 ; y un numero de filas y devuelve una lista con todos los estados no
 ; repetidos para cada variables
+(check-expect (crear-valuaciones 1 1) (list (list #false) (list #true)))
+(check-expect (crear-valuaciones 2 3) (list (list #false #false) (list #false #true) (list #true #false) (list #true #true)))
 (define
   (crear-valuaciones n filas)
   (cond [(= filas 0) (cons (crear-fila filas n) empty)]
@@ -58,6 +64,8 @@ Integrantes:
 ; valuaciones: Integer -> List(List(Integer))
 ; Funcion valuaciones. La función toma un numero de variables y devuelve
 ; todos los estados posibles, no repetidos, para cada variable.
+(check-expect (valuaciones 1) (list (list #false) (list #true)))
+(check-expect (valuaciones 2) (list (list #false #false) (list #false #true) (list #true #false) (list #true #true)))
 (define
   (valuaciones n)
   (crear-valuaciones n (-(expt 2 n) 1)))
@@ -99,6 +107,20 @@ Integrantes:
 (define  valuacion-B (B (list #t #t #t)))
 (define  valuacion-C (C (list #t #t)))
 
+; D: List(Boolean) -> Boolean
+; Funcion D. Representa la ecuacion proposicional p /\ ~p 
+(define
+  (D l)
+  (let ([p (first l)])
+  (and p (not p))))
+
+; D: List(Boolean) -> Boolean
+; Funcion E. Representa la ecuación proposicional p <-> q
+(define 
+  (E l)
+  (let ([p (first l)]
+        [q (second l)])
+  (equivalente p q)))
 
 ;;;;;;;; Ejercicio 4
 
@@ -106,6 +128,11 @@ Integrantes:
 ; Función evaluar. Toma una función representando una formula proposicional
 ; y la cantidad de variables y devuelve una lista de resultados para todas
 ; las valuaciones de las variables.
+(check-expect (evaluar A 3) (list #true #true #true #true #true #true #true #true))
+(check-expect (evaluar B 3) (list #true #true #false #true #false #true #true #true))
+(check-expect (evaluar C 2) (list #false #false #false #false))
+(check-expect (evaluar D 1) (list #false))
+(check-expect (evaluar E 2) (list #true #false #false #true))
 (define
   (evaluar P n)
   (map P (valuaciones n)))
@@ -119,6 +146,11 @@ Integrantes:
 ; tautologia?: List(Boolean) -> Boolean Integer -> Boolean
 ; Funcion tautologia?. Toma una función representando una formula proposicional
 ; y la cantidad de variables e informa si es una tautología.
+(check-expect (tautología? A 3) #true)
+(check-expect (tautología? B 3) #false)
+(check-expect (tautología? C 2) #false)
+(check-expect (tautología? D 1) #false)
+(check-expect (tautología? E 2) #false)
 (define
   (tautología? P n)
   (foldr Y #t(evaluar P n)))
@@ -130,6 +162,11 @@ Integrantes:
 ; satisfactible?: List(Boolean) -> Boolean Integer -> Boolean
 ; Funcion satisfactible?. Toma una función representado una formala proposicional
 ; y la cantidad de variables e informa si es satisfactible.
+(check-expect (satisfactible? A 3) #true)
+(check-expect (satisfactible? B 3) #true)
+(check-expect (satisfactible? C 2) #false)
+(check-expect (satisfactible? D 1) #false)
+(check-expect (satisfactible? E 2) #true)
 (define
   (satisfactible? P n)
   (foldr O #f(evaluar P n)))
@@ -137,6 +174,11 @@ Integrantes:
 ; contradiccion?: List(Boolean) -> Boolean Integer -> Boolean
 ; Funcion contradiccion?. Toma una función representando una formula proposicional
 ; y la cantidad de variable e informa si es una contradiccion.
+(check-expect (contradiccion? A 3) #false)
+(check-expect (contradiccion? B 3) #false)
+(check-expect (contradiccion? C 2) #true)
+(check-expect (contradiccion? D 1) #true)
+(check-expect (contradiccion? E 2) #false)
 (define
   (contradiccion? P n)
   (not (satisfactible? P n)))
