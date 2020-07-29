@@ -131,7 +131,7 @@ Integrantes:
 (check-expect (evaluar A 3) (list #true #true #true #true #true #true #true #true))
 (check-expect (evaluar B 3) (list #true #true #false #true #false #true #true #true))
 (check-expect (evaluar C 2) (list #false #false #false #false))
-(check-expect (evaluar D 1) (list #false))
+(check-expect (evaluar D 1) (list #false #false))
 (check-expect (evaluar E 2) (list #true #false #false #true))
 (define
   (evaluar P n)
