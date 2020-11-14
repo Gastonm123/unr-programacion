@@ -61,7 +61,7 @@ def chequearPalabra(palabra,alfabeto):
 # Descripción: esta función recibe el alfabeto que se va a utilizar y solicita al jugador que ingrese la palabra a adivinar. Usando
 # el alfabeto, determinará si la palabra ingresada está construida con dicho alfabeto y es una palabra válida. En caso de no serlo, 
 # dará un mensaje de error y seguirá solicitando una palabra hasta que la ingresada sea válida. Cuando esto ocurra, devolverá la
-# palabra válida en mayúscula, independientemente de cómo haya sido ingresada.
+# palabra válida en minúscula, independientemente de cómo haya sido ingresada.
 
 def ingresarPalabra(alfabeto):
     palabra = input('Jugador 1, por favor, ingrese la palabra secreta\n')
@@ -82,6 +82,9 @@ def ingresarPalabra(alfabeto):
 
 def chequearLetra(letra,alfabeto,yaJugadas):
     chequeo = True
+    if (letra == ''):
+        print('Error - No ingreso ningún caracter')
+        chequeo = False
     if (len(letra)>1):	# Si no es un caracter, dará un error.
         print('Error - Ingreso mas de un caracter')
         chequeo = False
@@ -99,7 +102,7 @@ def chequearLetra(letra,alfabeto,yaJugadas):
 # Descripción: esta función recibe un alfabeto y las letras ya ingresadas por el jugador, y solicita a éste que ingrese una 
 # nueva letra sugerida. Mientras el jugador no ingrese una letra que esté en el alfabeto y no haya sido ingresada previamente,
 # la función seguirá pidiendo el ingreso de una nueva letra. Cuando la letra ingresada sea válida, la función la devolverá 
-# en mayúscula, independientemente de cómo la haya ingresado el jugador.
+# en minúscula, independientemente de cómo la haya ingresado el jugador.
 
 def ingresarLetra(alfabeto,letrasYaJugadas):
     letra = input('Ingrese una letra: ')
@@ -109,6 +112,19 @@ def ingresarLetra(alfabeto,letrasYaJugadas):
         letra=letra.lower()
     return letra
     
+#--------------------------------------------------
+# ingresarNombreJugador: String -> String
+# Descripción: esta función recibe el alfabeto que se va a utilizar y solicita al segundo jugador que ingrese su nombre. Usando
+# el alfabeto, determinará si la nombre ingresado está construida con dicho alfabeto y es una palabra válida. En caso de no serlo, 
+# dará un mensaje de error y seguirá solicitando un nombre hasta que sea válido. Cuando esto ocurra, devolverá el nombre capitalizado, 
+# independientemente de cómo haya sido ingresado.
+
+def ingresarNombreJugador(alfabeto):
+    nombre = input('Jugador 2, por favor, ingrese su nombre\n')    
+    while(not chequearPalabra(nombre.lower(),alfabeto)): # Mientras la palabra no sea válida, pedir una palabra a adivinar.
+        print('ERROR - La palabra ingresada contiene caracteres no validos')
+        nombre = input('Jugador 2, por favor, ingrese su nombre\n')
+    return nombre.capitalize()
 
 #--------------------------------------------------
 # jugar: None -> None
@@ -125,7 +141,10 @@ def jugar():
     
     palabraAdivinada = inicializarPalabraAdivinada(len(palabraSecreta)) # Generar la secuencia de '-' que representa la palabra 
 																		# oculta (palabraAdivinada: String)
-    print('Jugador 2, es hora de adivinar!')
+
+    nombreJugador = ingresarNombreJugador(alfabeto) # Solicitar que se ingrese el nombre del segundo jugador (nombreJugador: String)
+
+    print(nombreJugador, ' es hora de adivinar!')
     while(vidas > 0 and not palabraSecreta==palabraAdivinada):	# Mientras haya vidas y la palabra oculta sea diferente de la 
 																# palabra a adivinar, seguir jugando.
         print('Juegue: ')
