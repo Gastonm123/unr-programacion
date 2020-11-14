@@ -5632,7 +5632,7 @@ ampelografo
 ampelologia
 amperaje
 ampere
-ampère
+ampï¿½re
 amperimetro
 amperio
 ampervuelta
@@ -12961,7 +12961,7 @@ boil
 boina
 boira
 boiserie
-boîte
+boï¿½te
 boj
 boja
 bojar
@@ -53186,7 +53186,7 @@ maiten
 maitinada
 maitinante
 maitines
-maître
+maï¿½tre
 maiz
 maizal
 maja

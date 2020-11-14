@@ -1,31 +1,4 @@
-# En esta implementación del juego, se tomaron ciertas decisiones sobre las estructuras de datos a usar y el diseño. Se hace
-# entonces una descripción general de los puntos más relevantes.
-#
-# * La palabra a adivinar es solicitada por el programa, a un jugador que la ingresará por teclado. El programa verificará que las 
-#   letras de dicha palabra pertenezca al abededario.
-#
-# * La palabra a adivinar es guardada internamente como un String ('palabraSecreta').
-#
-# * La palabra que se va completando a medida que el jugador va sugiriendo letras, es representada como 
-#   un String ('palabraAdivinada'), de igual longitud que la palabra a adivinar. Este String es inicialmente una secuencia de 
-#   '-', uno por cada letra de la palabra a adivinar. A medida que se van sugiriendo letras que están en la palabra a adivinar, 
-#   los '-' son sustituidos por dichas letras.
-#	
-# * El programa guarda en un String ('letrasYaJugadas'), las letras que va sugiriendo el jugador. Así, utilizando este String, 
-#   cuando el jugador ingresa una nueva letra, el programa verificará que se trate de una letra del abecedario que no haya sido 
-#   ya sugerida. En el caso en que lo ingresado no sea una letra o sea una letra repetida, el programa dará un mensaje de error 
-#   pero no descontará una vida, simplemente volverá a solicitar una nueva letra.
-#
-# * Cuando el jugador ingresa una letra que está en el abecedario y no está repetida, el programa evalúa si la letra es un substring
-#   de la palabra a adivinar ('palabraSecreta'). Si no lo es, descontará una vida. Si lo es, recorrerá la palabra a adivinar
-#   para determinar en qué posiciones está la letra. Cuando la encuentra en una cierta posición, sustituye en 
-#   la palabra oculta ('palabraAdivinada') el '-' por dicha letra.
-#
-# * Para controlar los posibles errores en los ingresos de los jugadores, el programa verifica que cuando se espera una letra, 
-#	la cadena ingresada tenga longitud 1 y sea un substring del abecedario. Y en el caso de que lo esperado sea una palabra, 
-#	el programa verifica que cada caracter de la cadena sea un substring del abecedario.
-#
-
+from os import path
 
 #--------------------------------------------------
 # inicializarAlfabeto: None -> String
@@ -126,6 +99,58 @@ def ingresarNombreJugador(alfabeto):
         nombre = input('Jugador 2, por favor, ingrese su nombre\n')
     return nombre.capitalize()
 
+# ingresarRutaDiccionario: String Boolean -> String
+# Descripción: esta función recibe el alias del archivo objetivo, si se quiere crear el archivo y devuelve la ruta al archivo. 
+# Si la ruta no corresponde a un archivo y no se desea crear el archivo, dara un error y seguira solicitando una ruta hasta
+# que sea valida. En caso de que se quiera crear un archivo, la funcion crea el archivo en la ruta recibida.
+
+def ingresarRuta(objetivo, crear_archivo=False):
+    ruta = input('Jugador 1, por favor, ingrese la ruta al %s\n' % objetivo)
+    while not path.isfile(ruta):
+        if crear_archivo and not path.isdir(ruta):
+            with open(ruta, 'w') as archivo:
+                pass
+        elif crear_archivo:
+            print('ERROR - La ruta ingresada es un directorio')
+            ruta = input('Jugador 1, por favor, ingrese la ruta al %s\n' % objetivo)
+        else:
+            print('ERROR - La ruta ingresada no corresponde a un archivo')
+            ruta = input('Jugador 1, por favor, ingrese la ruta al %s\n' % objetivo)
+    return ruta
+
+#--------------------------------------------------
+# rutaDiccionarioToLista: String -> List
+# Descripción: esta función recibe la ruta al diccionario y devuelve la lista de palabra en el archivo.
+
+def rutaDiccionarioToLista(rutaDiccionario):
+    listaPalabras = []
+    with open(rutaDiccionario) as diccionario:
+        for linea in diccionario:
+            palabra = linea.split()[0]
+            listaPalabras.append(palabra)
+    return listaPalabras
+
+#--------------------------------------------------
+# rutaHistorialToMapa: String -> Dictionary
+# Descripción: esta función recibe la ruta al historial y devuelve un diccionario conteniendo el historial de
+# partidas
+
+def rutaHistorialToMapa(rutaHistorial):
+    mapa = {}
+    with open(rutaHistorial) as historial:
+        nombreActual = '' 
+        for linea in historial:
+            linea = linea.strip()
+            if linea == '':
+                continue            
+            if linea[0].isupper():
+                nombreActual = linea
+                mapa[nombreActual] = []
+            else:
+                jugada = linea.split(',')
+                mapa[nombreActual].append(jugada)
+    return mapa
+
 #--------------------------------------------------
 # jugar: None -> None
 # Descripción: esta es la función principal, la cual inicia y lleva adelante el juego hasta el final.
@@ -137,8 +162,11 @@ def jugar():
     gano = False						# Identificador de si el jugador ha ganado o no.
     vidas = 6							# 'vidas' guarda la cantidad de vidas que tiene el jugador para adivinar la palabra.
     
-    palabraSecreta = ingresarPalabra(alfabeto)	# Solicitar que se ingrese la palabra a adivinar (palabraSecreta:String).
-    
+    rutaDiccionario = ingresarRuta('diccionario') # Solicitar la ruta al archivo que contiene el diccionario de palabra validas.
+    rutaHistorial = ingresarRuta('historial de partidas', True) # Solicitar la ruta al archivo que contiene el historial de partidas.
+    diccionario = rutaDiccionarioToLista(rutaDiccionario) # Leer la lista de palabras validas desde la ruta
+    historial = rutaHistorialToDiccionario(rutaHistorial) # Leer el historial de partidas desde la ruta
+    palabraSecreta = ingresarPalabra(alfabeto, diccionario)	# Solicitar que se ingrese la palabra a adivinar (palabraSecreta:String).
     palabraAdivinada = inicializarPalabraAdivinada(len(palabraSecreta)) # Generar la secuencia de '-' que representa la palabra 
 																		# oculta (palabraAdivinada: String)
 
