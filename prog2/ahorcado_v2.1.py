@@ -1,4 +1,5 @@
 from os import path
+from random import randrange
 
 #--------------------------------------------------
 # inicializarAlfabeto: None -> String
@@ -152,6 +153,40 @@ def rutaHistorialToMapa(rutaHistorial):
     return mapa
 
 #--------------------------------------------------
+# obtenerPalabrasJugadas: Dictionary String -> List
+# Descripción: esta función recibe el historial de partidas y el nombre del jugador y devuelve las palabras que
+# ya jugó el jugador.
+
+def obtenerPalabrasJugadas(historial, nombre):
+    palabrasJugadas = []
+    if nombre in historial:
+        jugadas = historial[nombre]
+        palabrasJugadas = [jugada[0] for jugada in jugadas]
+    return palabrasJugadas
+
+#--------------------------------------------------
+# obtenerPalabraSecreta: List List -> String
+# Descipción: esta función recibe el diccionario y las palabras ya jugadas y devuelve la palabra secreta. La 
+# palabra secreta se elige al azar de entre las palabras no jugadas.
+
+def obtenerPalabraSecreta(diccionario, palabrasJugadas):
+    palabrasNoJugadas = [palabra for palabra in diccionario if palabra not in palabrasJugadas]
+    return palabrasNoJugadas[randrange(len(palabrasNoJugadas))]
+    
+#--------------------------------------------------
+# actualizarHistorial: Dictionary String String Boolean String -> None
+# Descripción: esta función recibe el historial de partidas, la palabra secreta, si gano o no el jugador y la
+# cantidad de jugadas y devuelve el historial actualizado.
+
+def actualizarHistorial(historial, nombreJugador, palabraSecreta, gano, cantidadJugadas):
+    resultado = [palabraSecreta, 'SI' if gano else 'NO', cantidadJugadas]
+    if nombreJugador in historial:
+        historial[nombreJugador] += [resultado]
+    else:
+        historial[nombreJugador] = [resultado]
+    return historial
+
+#--------------------------------------------------
 # jugar: None -> None
 # Descripción: esta es la función principal, la cual inicia y lleva adelante el juego hasta el final.
 
@@ -166,11 +201,12 @@ def jugar():
     rutaHistorial = ingresarRuta('historial de partidas', True) # Solicitar la ruta al archivo que contiene el historial de partidas.
     diccionario = rutaDiccionarioToLista(rutaDiccionario) # Leer la lista de palabras validas desde la ruta
     historial = rutaHistorialToDiccionario(rutaHistorial) # Leer el historial de partidas desde la ruta
-    palabraSecreta = ingresarPalabra(alfabeto, diccionario)	# Solicitar que se ingrese la palabra a adivinar (palabraSecreta:String).
+
+    nombreJugador = ingresarNombreJugador(alfabeto) # Solicitar que se ingrese el nombre del segundo jugador (nombreJugador: String).
+    palabrasJugadas = obtenerPalabrasJugadas(historial, nombreJugador) # Obtener las palabras jugadas por el segundo jugador.
+    palabraSecreta = obtenerPalabraSecreta(diccionario, palabrasJugadas) # Solicitar que se ingrese la palabra a adivinar (palabraSecreta:String).
     palabraAdivinada = inicializarPalabraAdivinada(len(palabraSecreta)) # Generar la secuencia de '-' que representa la palabra 
 																		# oculta (palabraAdivinada: String)
-
-    nombreJugador = ingresarNombreJugador(alfabeto) # Solicitar que se ingrese el nombre del segundo jugador (nombreJugador: String)
 
     print(nombreJugador, ' es hora de adivinar!')
     while(vidas > 0 and not palabraSecreta==palabraAdivinada):	# Mientras haya vidas y la palabra oculta sea diferente de la 
@@ -189,10 +225,15 @@ def jugar():
 	# Al salir del bucle, se pregunta la causa de la salida, para dar diferentes mensajes al jugador.	                    
     if(palabraSecreta==palabraAdivinada):	# La palabra fue adivinada. El jugador ganó.
         print('Felicitaciones! Adivino la palabra secreta: ', palabraSecreta)
+        gano = True
     else:			# Se acabaron las vidas. El jugador perdió.
-        print('Ud. ha perdido - La palabra secreta era: ', palabraSecreta)
+        print('Ud. ha perdido - La palabra secreta era: ', palabraSecreta)        
+
+    historial = actualizarHistorial(historial, nombreJugador, palabraSecreta, gano, len(letrasYaJugadas))
+    escribirHistorial(rutaHistorial, historial)
             
 
 #--------------------------------------------------	
 #Iniciar el juego.
-jugar()
+if __name__ == '__main__':
+    jugar()
