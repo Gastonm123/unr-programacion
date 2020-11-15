@@ -31,24 +31,6 @@ def chequearPalabra(palabra,alfabeto):
     return (posicion == cantidadLetras)
 
 #--------------------------------------------------
-# ingresarPalabra: String -> String
-# Descripción: esta función recibe el alfabeto que se va a utilizar y solicita al jugador que ingrese la palabra a adivinar. Usando
-# el alfabeto, determinará si la palabra ingresada está construida con dicho alfabeto y es una palabra válida. En caso de no serlo, 
-# dará un mensaje de error y seguirá solicitando una palabra hasta que la ingresada sea válida. Cuando esto ocurra, devolverá la
-# palabra válida en minúscula, independientemente de cómo haya sido ingresada.
-
-def ingresarPalabra(alfabeto):
-    palabra = input('Jugador 1, por favor, ingrese la palabra secreta\n')
-    palabra = palabra.lower()
-    while(not chequearPalabra(palabra,alfabeto)):	# Mientras la palabra no sea válida, pedir una palabra a adivinar.
-        print('ERROR - La palabra ingresada contiene caracteres no validos')
-        palabra = input('Jugador 1, por favor, ingrese la palabra secreta')
-        palabra = palabra.lower()
-    return palabra
-
-
-
-#--------------------------------------------------
 # chequearLetra: String String String -> Bool
 # Descripción: esta función verifica que una cadena sea una letra, que esté en el abcedario y no haya sido previamente ingresada. 
 # Si no es un caracter, no está en el alfabeto o ya fue ingresada, dará un mensaje de error y devolverá False. En caso contrario, 
@@ -59,7 +41,7 @@ def chequearLetra(letra,alfabeto,yaJugadas):
     if (letra == ''):
         print('Error - No ingreso ningún caracter')
         chequeo = False
-    if (len(letra)>1):	# Si no es un caracter, dará un error.
+    elif (len(letra)>1): # Si no es un caracter, dará un error.
         print('Error - Ingreso mas de un caracter')
         chequeo = False
     elif (letra not in alfabeto): # Si es un caracter pero no está en el abecedario, dará un error.
@@ -174,17 +156,29 @@ def obtenerPalabraSecreta(diccionario, palabrasJugadas):
     return palabrasNoJugadas[randrange(len(palabrasNoJugadas))]
     
 #--------------------------------------------------
-# actualizarHistorial: Dictionary String String Boolean String -> None
+# actualizarHistorial: Dictionary String String Boolean Int -> None
 # Descripción: esta función recibe el historial de partidas, la palabra secreta, si gano o no el jugador y la
 # cantidad de jugadas y devuelve el historial actualizado.
 
 def actualizarHistorial(historial, nombreJugador, palabraSecreta, gano, cantidadJugadas):
-    resultado = [palabraSecreta, 'SI' if gano else 'NO', cantidadJugadas]
+    resultado = [palabraSecreta, 'SI' if gano else 'NO', str(cantidadJugadas)]
     if nombreJugador in historial:
         historial[nombreJugador] += [resultado]
     else:
         historial[nombreJugador] = [resultado]
     return historial
+
+#--------------------------------------------------
+# escribirHistorial: String Dictionary -> None
+# Descripción: esta función toma la ruta al historial, el historial actualizado y escribe el historial
+# en la ruta
+
+def escribirHistorial(rutaHistorial, historial):
+    with open(rutaHistorial, 'w') as archivoHistorial:
+        for nombre in historial:
+            archivoHistorial.write(nombre + '\n')
+            for jugada in historial[nombre]:
+                archivoHistorial.write(','.join(jugada) + '\n')
 
 #--------------------------------------------------
 # jugar: None -> None
@@ -200,7 +194,7 @@ def jugar():
     rutaDiccionario = ingresarRuta('diccionario') # Solicitar la ruta al archivo que contiene el diccionario de palabra validas.
     rutaHistorial = ingresarRuta('historial de partidas', True) # Solicitar la ruta al archivo que contiene el historial de partidas.
     diccionario = rutaDiccionarioToLista(rutaDiccionario) # Leer la lista de palabras validas desde la ruta
-    historial = rutaHistorialToDiccionario(rutaHistorial) # Leer el historial de partidas desde la ruta
+    historial = rutaHistorialToMapa(rutaHistorial) # Leer el historial de partidas desde la ruta
 
     nombreJugador = ingresarNombreJugador(alfabeto) # Solicitar que se ingrese el nombre del segundo jugador (nombreJugador: String).
     palabrasJugadas = obtenerPalabrasJugadas(historial, nombreJugador) # Obtener las palabras jugadas por el segundo jugador.
@@ -235,5 +229,4 @@ def jugar():
 
 #--------------------------------------------------	
 #Iniciar el juego.
-if __name__ == '__main__':
-    jugar()
+jugar()

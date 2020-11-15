@@ -1,0 +1,9 @@
+Juan
+certeza,NO,9
+ahirmar,NO,8
+lessueste,NO,8
+sintomatologico,NO,13
+Gaston
+calamocha,SI,11
+No
+arresto,SI,9
