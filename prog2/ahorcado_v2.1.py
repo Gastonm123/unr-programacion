@@ -1,4 +1,4 @@
-from os import path
+import os #usamos path y remove
 from random import randrange
 
 #--------------------------------------------------
@@ -7,8 +7,9 @@ from random import randrange
 
 def inicializarAlfabeto():
     return 'abcdefghijklmnñopqrstuvwxyz'
-    
-    
+#Función de prueba de la función inicializarAlfabeto
+def test_inicializarAlfabeto():   
+    assert inicializarAlfabeto()== 'abcdefghijklmnñopqrstuvwxyz'
 #--------------------------------------------------
 # inicializarPalabraAdivinada: Int -> String
 # Descripción: recibe la longitud de la palabra a adivinar y devuele un String de '-' consecutivos, 
@@ -16,7 +17,10 @@ def inicializarAlfabeto():
 
 def inicializarPalabraAdivinada(tamanio):
     return '-' * tamanio
-
+#Función de prueba de la función inicializarPalabraAdivinada
+def test_inicializarPalabraAdivinada():
+    assert inicializarPalabraAdivinada(3)=='___'
+    assert inicializarPalabraAdivinada(0)==''
 
 #--------------------------------------------------
 # chequearPalabra: String String -> Bool
@@ -25,11 +29,16 @@ def inicializarPalabraAdivinada(tamanio):
 
 def chequearPalabra(palabra,alfabeto):
     posicion = 0
+    palabra=palabra.lower()
     cantidadLetras = len(palabra)
     while posicion < cantidadLetras  and palabra[posicion] in alfabeto:
         posicion += 1
     return (posicion == cantidadLetras)
-
+#Función de prueba de la función chequearPalabra
+def test_chequearPalabra():
+    assert chequearPalabra('aaabbc','abc')== True
+    assert chequearPalabra('aaabbC','abc')== True
+    assert chequearPalabra('aaabbcd','abc')== False
 #--------------------------------------------------
 # chequearLetra: String String String -> Bool
 # Descripción: esta función verifica que una cadena sea una letra, que esté en el abcedario y no haya sido previamente ingresada. 
@@ -52,7 +61,12 @@ def chequearLetra(letra,alfabeto,yaJugadas):
         chequeo = False
     return chequeo # Si nada de lo anterior se cumple, es un caracter válido y devuelve True.
     
-
+#Función de prueba de la función chequearLetra
+def test_chequearLetra():
+    assert chequearLetra('ab','abc','')==False
+    assert chequearLetra('a','abc','')==True
+    assert chequearLetra('a','abc','a')==False
+    assert chequearLetra('g','abc','')==False
 #--------------------------------------------------
 # ingresarLetra: String String -> Char
 # Descripción: esta función recibe un alfabeto y las letras ya ingresadas por el jugador, y solicita a éste que ingrese una 
@@ -67,7 +81,7 @@ def ingresarLetra(alfabeto,letrasYaJugadas):
         letra=input('Vuelva a ingresar una letra: ')
         letra=letra.lower()
     return letra
-    
+  
 #--------------------------------------------------
 # ingresarNombreJugador: String -> String
 # Descripción: esta función recibe el alfabeto que se va a utilizar y solicita al segundo jugador que ingrese su nombre. Usando
@@ -112,6 +126,18 @@ def rutaDiccionarioToLista(rutaDiccionario):
             palabra = linea.split()[0]
             listaPalabras.append(palabra)
     return listaPalabras
+#Función de prueba de la función rutaDiccionarioToLista
+def test_rutaDiccionarioToLista():
+    rutaDiccionario ='prueba,txt'
+    with open(rutaDiccionario,'w') as archivo:
+        archivo.write('linea\nlinea')
+    assert rutaDiccionarioToLista(rutaDiccionario)==['linea','linea']
+    os.remove(archivo)
+    rutaDiccionario ='prueba,txt'
+    with open(rutaDiccionario,'w') as archivo:
+        archivo.write('')
+    assert rutaDiccionarioToLista(rutaDiccionario)==[]
+    os.remove(archivo)
 
 #--------------------------------------------------
 # rutaHistorialToMapa: String -> Dictionary
@@ -133,7 +159,9 @@ def rutaHistorialToMapa(rutaHistorial):
                 jugada = linea.split(',')
                 mapa[nombreActual].append(jugada)
     return mapa
-
+#Función de prueba de la función
+def test_:
+    assert ==
 #--------------------------------------------------
 # obtenerPalabrasJugadas: Dictionary String -> List
 # Descripción: esta función recibe el historial de partidas y el nombre del jugador y devuelve las palabras que
@@ -145,18 +173,33 @@ def obtenerPalabrasJugadas(historial, nombre):
         jugadas = historial[nombre]
         palabrasJugadas = [jugada[0] for jugada in jugadas]
     return palabrasJugadas
-
+#Función de prueba de la función
+def test_:
+    assert ==
 #--------------------------------------------------
-# obtenerPalabraSecreta: List List -> String
+# obtenerPalabraSecreta: List(String) List(String) -> String
 # Descipción: esta función recibe el diccionario y las palabras ya jugadas y devuelve la palabra secreta. La 
-# palabra secreta se elige al azar de entre las palabras no jugadas.
+# palabra secreta se elige al azar de entre las palabras no jugadas, siempre que esto sea posible.
 
 def obtenerPalabraSecreta(diccionario, palabrasJugadas):
+    if len(palabrasJugadas)>= len(diccionario):
+        return  palabrasNoJugadas[randrange(len(diccionario))]
     palabrasNoJugadas = [palabra for palabra in diccionario if palabra not in palabrasJugadas]
     return palabrasNoJugadas[randrange(len(palabrasNoJugadas))]
-    
+#Función de prueba de la función
+def test_obtenerPalabraSecreta():
+    diccionario = ['uno','dos']
+    palabrasJugadas=['uno']
+    assert obtenerPalabraSecreta(diccionario, palabrasJugadas)=='dos'
+    diccionario = ['uno','dos']
+    palabrasJugadas=[]
+    assert obtenerPalabraSecreta(diccionario, palabrasJugadas) in diccionario
+    diccionario = ['uno','dos']
+    palabrasJugadas=['uno','dos']
+    assert obtenerPalabraSecreta(diccionario, palabrasJugadas) in diccionario
+
 #--------------------------------------------------
-# actualizarHistorial: Dictionary String String Boolean Int -> None
+# actualizarHistorial: Dictionary String String Boolean Int -> Dictionary
 # Descripción: esta función recibe el historial de partidas, la palabra secreta, si gano o no el jugador y la
 # cantidad de jugadas y devuelve el historial actualizado.
 
@@ -167,7 +210,9 @@ def actualizarHistorial(historial, nombreJugador, palabraSecreta, gano, cantidad
     else:
         historial[nombreJugador] = [resultado]
     return historial
-
+#Función de prueba de la función
+def test_:
+    assert == 
 #--------------------------------------------------
 # escribirHistorial: String Dictionary -> None
 # Descripción: esta función toma la ruta al historial, el historial actualizado y escribe el historial
@@ -229,4 +274,10 @@ def jugar():
 
 #--------------------------------------------------	
 #Iniciar el juego.
-jugar()
+test_inicializarAlfabeto()
+test_inicializarPalabraAdivinada()
+test_chequearPalabra()
+test_chequearLetra()
+test_obtenerPalabraSecreta()
+test_rutaDiccionarioToLista()
+#jugar()
