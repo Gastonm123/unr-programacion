@@ -1,3 +1,39 @@
+# En esta implementación del juego, se tomaron ciertas decisiones sobre las estructuras de datos a usar y el diseño. Se hace
+# entonces una descripción general de los puntos más relevantes.
+#
+# * El programa tambien pide que se ingresen:
+# - La ruta a un archivo que se supone no este vacío y tenga una palabra por línea. Dicho archivo sera parseado como una lista
+#   de strings ('diccionario')
+# - El nombre del jugador guardado internamente como un String ('nombreJugador') 
+# - La ruta a un archivo que se supone tenga como lineas posibles, uno nombre o una palabra en minusculas, SI/NO, un número.
+#   Dicho archivo sera parseado com un diccionario sindo las claves los nombres  y como datos Listas(Listas(String)).
+#
+# * La palabra a adivinar es seleccionada en forma aleatoria de una lista predefinida de palabras posibles ('diccionario').
+#   letras de dicha palabra pertenezca al abededario.
+#
+# * La palabra a adivinar es guardada internamente como un String ('palabraSecreta').
+#
+# * La palabra que se va completando a medida que el jugador va sugiriendo letras, es representada como 
+#   un String ('palabraAdivinada'), de igual longitud que la palabra a adivinar. Este String es inicialmente una secuencia de 
+#   '-', uno por cada letra de la palabra a adivinar. A medida que se van sugiriendo letras que están en la palabra a adivinar, 
+#   los '-' son sustituidos por dichas letras.
+#	
+# * El programa guarda en un String ('letrasYaJugadas'), las letras que va sugiriendo el jugador. Así, utilizando este String, 
+#   cuando el jugador ingresa una nueva letra, el programa verificará que se trate de una letra del abecedario que no haya sido 
+#   ya sugerida. En el caso en que lo ingresado no sea una letra o sea una letra repetida, el programa dará un mensaje de error 
+#   pero no descontará una vida, simplemente volverá a solicitar una nueva letra.
+#
+# * Cuando el jugador ingresa una letra que está en el abecedario y no está repetida, el programa evalúa si la letra es un substring
+#   de la palabra a adivinar ('palabraSecreta'). Si no lo es, descontará una vida. Si lo es, recorrerá la palabra a adivinar
+#   para determinar en qué posiciones está la letra. Cuando la encuentra en una cierta posición, sustituye en 
+#   la palabra oculta ('palabraAdivinada') el '-' por dicha letra.
+#
+# * Para controlar los posibles errores en los ingresos de los jugadores, el programa verifica que cuando se espera una letra, 
+#	la cadena ingresada tenga longitud 1 y sea un substring del abecedario. Y en el caso de que lo esperado sea una palabra, 
+#	el programa verifica que cada caracter de la cadena sea un substring del abecedario.
+#
+
+
 import os #usamos path y remove
 from random import randrange
 
