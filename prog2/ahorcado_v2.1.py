@@ -55,7 +55,7 @@ def inicializarPalabraAdivinada(tamanio):
     return '-' * tamanio
 #Función de prueba de la función inicializarPalabraAdivinada
 def test_inicializarPalabraAdivinada():
-    assert inicializarPalabraAdivinada(3)=='___'
+    assert inicializarPalabraAdivinada(3)=='---'
     assert inicializarPalabraAdivinada(0)==''
 
 #--------------------------------------------------
@@ -139,10 +139,10 @@ def ingresarNombreJugador(alfabeto):
 
 def ingresarRuta(objetivo, crear_archivo=False):
     ruta = input('Jugador 1, por favor, ingrese la ruta al %s\n' % objetivo)
-    while not path.isfile(ruta):
-        if crear_archivo and not path.isdir(ruta):
-            with open(ruta, 'w') as archivo:
-                pass
+    while not os.path.isfile(ruta):
+        if crear_archivo and not os.path.isdir(ruta):
+            archivo=open(ruta, 'w')
+            archivo.close()
         elif crear_archivo:
             print('ERROR - La ruta ingresada es un directorio')
             ruta = input('Jugador 1, por favor, ingrese la ruta al %s\n' % objetivo)
@@ -168,12 +168,12 @@ def test_rutaDiccionarioToLista():
     with open(rutaDiccionario,'w') as archivo:
         archivo.write('linea\nlinea')
     assert rutaDiccionarioToLista(rutaDiccionario)==['linea','linea']
-    os.remove(archivo)
+    os.remove(rutaDiccionario)
     rutaDiccionario ='prueba,txt'
     with open(rutaDiccionario,'w') as archivo:
         archivo.write('')
     assert rutaDiccionarioToLista(rutaDiccionario)==[]
-    os.remove(archivo)
+    os.remove(rutaDiccionario)
 
 #--------------------------------------------------
 # rutaHistorialToMapa: String -> Dictionary
@@ -195,12 +195,21 @@ def rutaHistorialToMapa(rutaHistorial):
                 jugada = linea.split(',')
                 mapa[nombreActual].append(jugada)
     return mapa
-#Función de prueba de la función
-def test_:
-    assert ==
+#Función de prueba de la función rutaHistorialToMapa
+def test_rutaHistorialToMapa():
+    rutaHistorial ='prueba,txt'
+    with open(rutaHistorial,'w') as archivo:
+        archivo.write('Juan\n hola,SI,6\n como,NO,4\n Gas\n gato,NO,10')
+    assert rutaHistorialToMapa(rutaHistorial)=={'Juan': [['hola', 'SI','6'],['como','NO','4']], 'Gas': [['gato','NO','10']]}
+    os.remove(rutaHistorial)
+    rutaHistorial ='prueba,txt'
+    with open(rutaHistorial,'w') as archivo:
+        archivo.write('')
+    assert rutaHistorialToMapa(rutaHistorial)=={}
+    os.remove(rutaHistorial)
 #--------------------------------------------------
 # obtenerPalabrasJugadas: Dictionary String -> List
-# Descripción: esta función recibe el historial de partidas y el nombre del jugador y devuelve las palabras que
+# Descripción: oesta función recibe el historial de partidas y el nombre del jugador y devuelve las palabras que
 # ya jugó el jugador.
 
 def obtenerPalabrasJugadas(historial, nombre):
@@ -209,9 +218,13 @@ def obtenerPalabrasJugadas(historial, nombre):
         jugadas = historial[nombre]
         palabrasJugadas = [jugada[0] for jugada in jugadas]
     return palabrasJugadas
-#Función de prueba de la función
-def test_:
-    assert ==
+#Función de prueba de la función obtenerPalabrasJugadas
+def test_obtenerPalabrasJugadas():
+    historial= {'Juan': [['hola', 'SI','6'],['como','NO','4']], 'Gas': [['gato','NO','10']]}
+    assert obtenerPalabrasJugadas(historial, 'Juan')==['hola','como']
+    assert obtenerPalabrasJugadas(historial, 'Gas')==['gato']
+    assert obtenerPalabrasJugadas(historial, 'Vero')==[]
+    assert obtenerPalabrasJugadas({}, 'Vero')==[]
 #--------------------------------------------------
 # obtenerPalabraSecreta: List(String) List(String) -> String
 # Descipción: esta función recibe el diccionario y las palabras ya jugadas y devuelve la palabra secreta. La 
@@ -219,7 +232,7 @@ def test_:
 
 def obtenerPalabraSecreta(diccionario, palabrasJugadas):
     if len(palabrasJugadas)>= len(diccionario):
-        return  palabrasNoJugadas[randrange(len(diccionario))]
+        return  diccionario[randrange(len(diccionario))]
     palabrasNoJugadas = [palabra for palabra in diccionario if palabra not in palabrasJugadas]
     return palabrasNoJugadas[randrange(len(palabrasNoJugadas))]
 #Función de prueba de la función
@@ -246,9 +259,12 @@ def actualizarHistorial(historial, nombreJugador, palabraSecreta, gano, cantidad
     else:
         historial[nombreJugador] = [resultado]
     return historial
-#Función de prueba de la función
-def test_:
-    assert == 
+#Función de prueba de la función actualizarHistorial
+def test_actualizarHistorial():
+    historial= {'Juan': [['hola', 'SI','6'],['como','NO','4']], 'Gas': [['gato','NO','10']]}
+    assert actualizarHistorial(historial,'Vero','patata',True,6)=={'Juan': [['hola', 'SI','6'],['como','NO','4']], 'Gas': [['gato','NO','10']], 'Vero':[['patata','SI','6']]}
+    historial={}
+    assert actualizarHistorial(historial,'Vero','patata',True,6)=={'Vero':[['patata','SI','6']]}
 #--------------------------------------------------
 # escribirHistorial: String Dictionary -> None
 # Descripción: esta función toma la ruta al historial, el historial actualizado y escribe el historial
@@ -309,11 +325,19 @@ def jugar():
             
 
 #--------------------------------------------------	
+# correrTests: None -> None
+# Descripción: esta es la función que llama a los test para chequear que este todo funcionando.
+def correrTests():
+    test_inicializarAlfabeto()
+    test_inicializarPalabraAdivinada()
+    test_chequearPalabra()
+    test_chequearLetra()
+    test_obtenerPalabraSecreta()
+    test_rutaDiccionarioToLista()
+    test_rutaHistorialToMapa()
+    test_obtenerPalabrasJugadas()
+    test_actualizarHistorial()
+#--------------------------------------------------	
 #Iniciar el juego.
-test_inicializarAlfabeto()
-test_inicializarPalabraAdivinada()
-test_chequearPalabra()
-test_chequearLetra()
-test_obtenerPalabraSecreta()
-test_rutaDiccionarioToLista()
-#jugar()
+correrTests()
+jugar()
