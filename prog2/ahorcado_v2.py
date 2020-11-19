@@ -340,8 +340,8 @@ def correrTests():
     test_rutaHistorialToMapa()
     test_obtenerPalabrasJugadas()
     test_actualizarHistorial()
-    sys.stdout = stdout
-    
+    sys.stdout = stdout  # restauramos stdout
+
 #--------------------------------------------------	
 #Iniciar el juego.
 correrTests()
