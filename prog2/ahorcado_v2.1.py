@@ -87,7 +87,7 @@ def chequearLetra(letra,alfabeto,yaJugadas):
         print('Error - No ingreso ningún caracter')
         chequeo = False
     elif (len(letra)>1): # Si no es un caracter, dará un error.
-        print('Error - Ingreso mas de un caracter')
+        print('Error - Ingreso más de un caracter')
         chequeo = False
     elif (letra not in alfabeto): # Si es un caracter pero no está en el abecedario, dará un error.
         print('Error - Ingreso un caracter invalido')
@@ -138,17 +138,17 @@ def ingresarNombreJugador(alfabeto):
 # que sea valida. En caso de que se quiera crear un archivo, la funcion crea el archivo en la ruta recibida.
 
 def ingresarRuta(objetivo, crear_archivo=False):
-    ruta = input('Jugador 1, por favor, ingrese la ruta al %s\n' % objetivo)
+    ruta = input('Por favor, ingrese la ruta al %s\n' % objetivo)
     while not os.path.isfile(ruta):
         if crear_archivo and not os.path.isdir(ruta):
             archivo=open(ruta, 'w')
             archivo.close()
         elif crear_archivo:
             print('ERROR - La ruta ingresada es un directorio')
-            ruta = input('Jugador 1, por favor, ingrese la ruta al %s\n' % objetivo)
+            ruta = input('Por favor, ingrese la ruta al %s\n' % objetivo)
         else:
             print('ERROR - La ruta ingresada no corresponde a un archivo')
-            ruta = input('Jugador 1, por favor, ingrese la ruta al %s\n' % objetivo)
+            ruta = input('Por favor, ingrese la ruta al %s\n' % objetivo)
     return ruta
 
 #--------------------------------------------------
