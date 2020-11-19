@@ -36,6 +36,7 @@
 
 import os #usamos path y remove
 from random import randrange
+import sys
 
 #--------------------------------------------------
 # inicializarAlfabeto: None -> String
@@ -328,6 +329,8 @@ def jugar():
 # correrTests: None -> None
 # Descripción: esta es la función que llama a los test para chequear que este todo funcionando.
 def correrTests():
+    stdout = sys.stdout # guardamos stdout
+    sys.stdout = None # evitamos que cualquier mensaje de los tests se imprima
     test_inicializarAlfabeto()
     test_inicializarPalabraAdivinada()
     test_chequearPalabra()
@@ -337,6 +340,8 @@ def correrTests():
     test_rutaHistorialToMapa()
     test_obtenerPalabrasJugadas()
     test_actualizarHistorial()
+    sys.stdout = stdout
+    
 #--------------------------------------------------	
 #Iniciar el juego.
 correrTests()
